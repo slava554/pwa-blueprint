@@ -64,6 +64,16 @@
     </div>
     <div id="server-setup">
         <h4>Настройка сервера</h4>
+        <h5>ssh</h5>
+        <p>
+            nano /etc/ssh/sshd_config <br>
+        <hr>
+            TCPKeepAlive no <br>
+            ClientAliveInterval 30 <br>
+            ClientAliveCountMax 2400 <br>
+            service ssh restart <br>
+        <hr>
+        </p>
         <h5>Пакеты</h5>
         <p>
             apt install php -y <br>
