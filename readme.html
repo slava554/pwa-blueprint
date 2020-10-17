@@ -4,119 +4,154 @@
     <meta charset="UTF-8">
     <title>Readme</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://unpkg.com/vue@next"></script>
 </head>
 <body>
-<header>
-    <h2>Инструкция по настройке PWA</h2>
-    <style>
-        .test{
-            color: green;
-        }
-    </style>
-</header>
-<main class="container">
-    <div id="creditals">
-        <h4>Учетные данные</h4>
-        <p>
-            Пароль: <input type="text"><br>
-            E-Mail: <input type="text"><br>
-        </p>
-        <h5>vps</h5>
-        <p>
-            ip: <input type="text"><br>
-            пароль: <input type="text"><br>
-        </p>
-        <h5>Домен</h5>
-        <p>
-            основной домен: <input type="text"><br>
-            поддомены: <input type="text"><br>
-        </p>
-        <h5>Pusher</h5>
-        <p>
-            PUSHER_APP_ID: <input type="text"><br>
-            PUSHER_APP_KEY: <input type="text"><br>
-            PUSHER_APP_SECRET: <input type="text"><br>
-            PUSHER_APP_CLUSTER: <input type="text"><br>
-        </p>
-    </div>
-    <div id="registration">
-        <h4>Регистрация</h4>
-        <h5>cp.vdsina.ru/vds</h5>
-        <p>
-            без авто резервной копии <br>
-            apt update -y <br>
-            apt upgrade -y <br>
-            apt install apache2 -y <br>
-            <span class="test">проверяем - ip в браузер, должна открыться страница apache</span> <br>
-        </p>
-        <h5>temp-mail.org</h5>
-        <p>
-            12 месяцев, zip 1073**, заполняем все <br>
-            входим, service > my domains > freedom dns <br>
-            добавляем поддомены backend frontend s1 s2 s3 <br>
-        </p>
-        <h5>pusher.com</h5>
-        <p>
-            Channels <br>
-            название my-channel <br>
-            App Settings > Enable client events <br>
-        </p>
-    </div>
-    <div id="server-setup">
-        <h4>Настройка сервера</h4>
-        <h5>ssh</h5>
-        <p>
-            nano /etc/ssh/sshd_config <br>
-        <hr>
-            TCPKeepAlive no <br>
-            ClientAliveInterval 30 <br>
-            ClientAliveCountMax 2400 <br>
-        <hr>
-            service ssh restart <br>
-        </p>
-        <h5>Пакеты</h5>
-        <p>
-            apt install php -y <br>
-            apt install zip unzip -y <br>
-            apt install php-mysql -y <br>
-            apt install php-mbstring -y <br>
-            apt install php-tokenizer -y <br>
-            apt install php-xml -y <br>
-            apt install php-json -y <br>
-            apt install php-common -y <br>
-            apt install php-gd -y <br>
-            apt install php-zip -y <br>
-            apt install php-cli -y <br>
-            apt install php-curl -y <br>
-            apt install php-intl -y <br>
-            apt install php-bcmath -y <br>
-            apt install php-imap -y <br>
-            apt install php-tokenizer -y <br>
-            apt install php-curl -y <br>
-            apt install mysql-server -y <br>
-            apt install nodejs -y <br>
-            apt install npm -y <br>
-            apt install certbot python3-certbot-apache -y <br>
-            apt install composer -y <br>
-        </p>
+<div id="app">
+    <header>
+        <h2>Инструкция по настройке PWA</h2>
+        <style>
+            .test{
+                color: green;
+            }
+        </style>
+    </header>
+    <main class="container">
+        <div id="creditals">
+            <h4>Учетные данные</h4>
+            <p>
+                Пароль: <input type="text" v-model="pass"><br>
+                E-Mail: <input type="text"><br>
+            </p>
+            <h5>vps</h5>
+            <p>
+                ip: <input type="text"><br>
+                пароль: <input type="text"><br>
+            </p>
+            <h5>Домен</h5>
+            <p>
+                основной домен: <input type="text"><br>
+                поддомены: <input type="text"><br>
+            </p>
+            <h5>Pusher</h5>
+            <p>
+                PUSHER_APP_ID: <input type="text"><br>
+                PUSHER_APP_KEY: <input type="text"><br>
+                PUSHER_APP_SECRET: <input type="text"><br>
+                PUSHER_APP_CLUSTER: <input type="text"><br>
+            </p>
+        </div>
+        <div id="registration">
+            <h4>Регистрация</h4>
+            <h5>cp.vdsina.ru/vds</h5>
+            <p>
+                без авто резервной копии <br>
+                apt update -y <br>
+                apt upgrade -y <br>
+                apt install apache2 -y <br>
+                <span class="test">проверяем - ip в браузер, должна открыться страница apache</span> <br>
+            </p>
+            <h5>temp-mail.org</h5>
+            <p>
+                12 месяцев, zip 1073**, заполняем все <br>
+                входим, service > my domains > freedom dns <br>
+                добавляем поддомены backend frontend s1 s2 s3 <br>
+            </p>
+            <h5>pusher.com</h5>
+            <p>
+                Channels <br>
+                название my-channel <br>
+                App Settings > Enable client events <br>
+            </p>
+        </div>
+        <div id="server-setup">
+            <h4>Настройка сервера</h4>
+            <h5>ssh</h5>
+            <p>
+                nano /etc/ssh/sshd_config <br>
+            </p>
+            <hr>
+            <p>
+                TCPKeepAlive no <br>
+                ClientAliveInterval 30 <br>
+                ClientAliveCountMax 2400 <br>
+            </p>
+            <hr>
+            <p>
+                service ssh restart <br>
+            </p>
+            <h5>Пакеты</h5>
+            <p>
+                apt install php -y <br>
+                apt install zip unzip -y <br>
+                apt install php-mysql -y <br>
+                apt install php-mbstring -y <br>
+                apt install php-tokenizer -y <br>
+                apt install php-xml -y <br>
+                apt install php-json -y <br>
+                apt install php-common -y <br>
+                apt install php-gd -y <br>
+                apt install php-zip -y <br>
+                apt install php-cli -y <br>
+                apt install php-curl -y <br>
+                apt install php-intl -y <br>
+                apt install php-bcmath -y <br>
+                apt install php-imap -y <br>
+                apt install php-tokenizer -y <br>
+                apt install php-curl -y <br>
+                apt install mysql-server -y <br>
+                apt install nodejs -y <br>
+                apt install npm -y <br>
+                apt install certbot python3-certbot-apache -y <br>
+                apt install composer -y <br>
+            </p>
 
-        <h5>Swap</h5>
-        <p>
-            free -m <br>
-            mkdir -p /var/_swap_ <br>
-            cd /var/_swap_ <br>
-            dd if=/dev/zero of=swapfile bs=1M count=2000 <br>
-            mkswap swapfile <br>
-            swapon swapfile <br>
-            chmod 600 swapfile <br>
-            echo "/var/_swap_/swapfile none swap sw 0 0" >> /etc/fstab <br>
-            free -m <br>
-        </p>
-    </div>
+            <h5>Swap</h5>
+            <p>
+                free -m <br>
+                mkdir -p /var/_swap_ <br>
+                cd /var/_swap_ <br>
+                dd if=/dev/zero of=swapfile bs=1M count=2000 <br>
+                mkswap swapfile <br>
+                swapon swapfile <br>
+                chmod 600 swapfile <br>
+                echo "/var/_swap_/swapfile none swap sw 0 0" >> /etc/fstab <br>
+                free -m <br>
+            </p>
 
-</main>
+            <h5>Подготовка к установке Laravel</h5>
+            <p>
+                a2enmod rewrite <br>
+                service apache2 restart <br>
+                mysql_secure_installation <br>
+                mysql <br>
+                CREATE USER 's'@'localhost' IDENTIFIED BY '{{pass}}'; <br>
+                GRANT ALL PRIVILEGES ON *.* TO 's'@'localhost' WITH GRANT OPTION; <br>
+                FLUSH PRIVILEGES; <br>
+                exit <br>
+
+                cd /var/_swap_ <br>
+                dd if=/dev/zero of=swapfile bs=1M count=2000 <br>
+                mkswap swapfile <br>
+                swapon swapfile <br>
+                chmod 600 swapfile <br>
+                echo "/var/_swap_/swapfile none swap sw 0 0" >> /etc/fstab <br>
+                free -m <br>
+            </p>
 
 
+        </div>
 
+    </main>
+</div>
+<script>
+  const App = {
+    data:()=>({
+      pass: '',
+    }),
+  };
+
+  Vue.createApp(App).mount('#app')
+</script>
 </body>
 </html>
