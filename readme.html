@@ -5,40 +5,41 @@
     <title>Readme</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://unpkg.com/vue@next"></script>
+    <style>
+        .tests{
+            color: green;
+            font-size: 150%;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
     <header>
         <h2>Инструкция по настройке PWA</h2>
-        <style>
-            .test{
-                color: green;
-            }
-        </style>
     </header>
     <main class="container">
         <div id="creditals">
             <h4>Учетные данные</h4>
             <p>
                 Пароль: <input type="text" v-model="pass"><br>
-                E-Mail: <input type="text"><br>
+                E-Mail: <input type="text" v-model="mail"><br>
             </p>
             <h5>vps</h5>
             <p>
-                ip: <input type="text"><br>
-                пароль: <input type="text"><br>
+                ip: <input type="text" v-model="vpsIp"><br>
+                пароль: <input type="text" v-model="vpsPass"><br>
             </p>
             <h5>Домен</h5>
             <p>
-                основной домен: <input type="text"><br>
-                поддомены: <input type="text"><br>
+                основной домен: <input type="text" v-model="domain"><br>
+                поддомены: <input type="text" v-model="subdomains"><br>
             </p>
             <h5>Pusher</h5>
             <p>
-                PUSHER_APP_ID: <input type="text"><br>
-                PUSHER_APP_KEY: <input type="text"><br>
-                PUSHER_APP_SECRET: <input type="text"><br>
-                PUSHER_APP_CLUSTER: <input type="text"><br>
+                PUSHER_APP_ID: <input type="text" v-model="pusherId"><br>
+                PUSHER_APP_KEY: <input type="text" v-model="pusherKey"><br>
+                PUSHER_APP_SECRET: <input type="text" v-model="pusherSecret"><br>
+                PUSHER_APP_CLUSTER: <input type="text" v-model="pusherCl"><br>
             </p>
         </div>
         <div id="registration">
@@ -49,7 +50,7 @@
                 apt update -y <br>
                 apt upgrade -y <br>
                 apt install apache2 -y <br>
-                <span class="test">проверяем - ip в браузер, должна открыться страница apache</span> <br>
+                <span class="tests">проверяем - ip в браузер, должна открыться страница apache</span> <br>
             </p>
             <h5>temp-mail.org</h5>
             <p>
@@ -73,12 +74,13 @@
             <hr>
             <p>
                 TCPKeepAlive no <br>
-                ClientAliveInterval 30 <br>
-                ClientAliveCountMax 2400 <br>
+                ClientAliveInterval 36000 <br>
+                ClientAliveCountMax 3 <br>
             </p>
             <hr>
             <p>
                 service ssh restart <br>
+                service sshd restart <br>
             </p>
             <h5>Пакеты</h5>
             <p>
@@ -119,24 +121,78 @@
                 free -m <br>
             </p>
 
-            <h5>Подготовка к установке Laravel</h5>
+            <h5>Подключаемся через sshfs</h5>
             <p>
-                a2enmod rewrite <br>
-                service apache2 restart <br>
+                В консоли windows<br>
+                net use z: \\sshfs\root@{{domain}}\\\\<br>
+                Вводим пользователя root<br>
+                Вводим пароль {{vpsPass}}<br>
+                Если нет sshfs, устанавливаем https://github.com/billziss-gh/winfsp/releases/tag/v1.7 и https://github.com/billziss-gh/sshfs-win/releases<br>
+            </p>
+
+
+            <h5>Настраиваем MySql</h5>
+            <p>
                 mysql_secure_installation <br>
                 mysql <br>
                 CREATE USER 's'@'localhost' IDENTIFIED BY '{{pass}}'; <br>
                 GRANT ALL PRIVILEGES ON *.* TO 's'@'localhost' WITH GRANT OPTION; <br>
                 FLUSH PRIVILEGES; <br>
                 exit <br>
+            </p>
 
-                cd /var/_swap_ <br>
-                dd if=/dev/zero of=swapfile bs=1M count=2000 <br>
-                mkswap swapfile <br>
-                swapon swapfile <br>
-                chmod 600 swapfile <br>
-                echo "/var/_swap_/swapfile none swap sw 0 0" >> /etc/fstab <br>
-                free -m <br>
+            <h5>Настраиваем Apache2</h5>
+            <p>
+                a2enmod rewrite <br>
+                nano /etc/apache2/sites-available/000-default.conf <br>
+                добавляем в конец<br>
+            </p>
+            <hr>
+            <p>
+                &lt;Directory /var/www/html&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Options Indexes FollowSymLinks MultiViews<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;AllowOverride All<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Order allow,deny<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;allow from all<br>
+                &lt;/Directory&gt;<br>
+            </p>
+            <hr>
+            <p>
+                service apache2 restart <br>
+            </p>
+
+            <h5>Поддомены Apache2</h5>
+            <p>
+                создаем в /var/www папки для поддоменов <span v-for="subdomain in fullSubdomains" :key="subdomain">{{subdomain}}&nbsp;</span> <br>
+                в папках создаем index.html с именем поддомена <br>
+                cd /var/www <br>
+                chown -R www-data:www-data ./ <br><br>
+
+                cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/{{domain}}.conf<br>
+                nano /etc/apache2/sites-available/{{domain}}.conf <br>
+                ServerAlias {{domain}}  <br>
+                a2ensite {{domain}} <br><br>
+
+                <span v-for="subdomain in fullSubdomains" :key="subdomain">
+                    cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/{{subdomain}}.conf<br>
+                    nano /etc/apache2/sites-available/{{subdomain}}.conf <br>
+                    Изменяем DocumentRoot /var/www/{{subdomain}}  <br>
+                    ServerAlias {{subdomain}}  <br>
+                    a2ensite {{subdomain}} <br><br>
+                </span>
+                service apache2 restart <br>
+                mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf.old <br>
+                <span class="tests">проверяем что все поддомены открываются по http</span> <br>
+            </p>
+
+            <h5>Настраиваем ssl</h5>
+            <p>
+                certbot --apache <br>
+                вводим почту admin@{{domain}} <br>
+                вводим домен и поддомены через пробел {{domain}}
+                <span v-for="subdomain in fullSubdomains" :key="subdomain">{{subdomain}}&nbsp;</span> <br>
+                systemctl status certbot.timer <br>
+                <span class="tests">проверяем что все поддомены открываются по https</span> <br>
             </p>
 
 
@@ -148,7 +204,69 @@
   const App = {
     data:()=>({
       pass: '',
+      vpsPass: '',
+      vpsIp: '',
+      domain: '',
+      mail: '',
+      subdomains: '',
+      pusherId: '',
+      pusherKey: '',
+      pusherSecret: '',
+      pusherCl: '',
+
     }),
+
+    computed: {
+      fullSubdomains(){
+        let subdomainsArrRez = [];
+        let subdomainsArr = this.subdomains.split(' ');
+        subdomainsArr.forEach( (el)=>{
+          subdomainsArrRez.push( el.trim().replaceAll(',', '') + '.' + this.domain );
+        } );
+        return subdomainsArrRez;
+      },
+    },
+
+    created(){
+      window.addEventListener('beforeunload', ()=>{
+        localStorage.setItem('pass', this.pass);
+        localStorage.setItem('vpsPass', this.vpsPass);
+        localStorage.setItem('vpsIp', this.vpsIp);
+        localStorage.setItem('domain', this.domain);
+
+        localStorage.setItem('mail', this.mail);
+        localStorage.setItem('subdomains', this.subdomains);
+        localStorage.setItem('pusherId', this.pusherId);
+        localStorage.setItem('pusherKey', this.pusherKey);
+        localStorage.setItem('pusherSecret', this.pusherSecret);
+        localStorage.setItem('pusherCl', this.pusherCl);
+
+      }, false);
+      this.pass = localStorage.getItem('pass');
+      this.vpsPass = localStorage.getItem('vpsPass');
+      this.vpsIp = localStorage.getItem('vpsIp');
+      this.domain = localStorage.getItem('domain');
+      this.mail = localStorage.getItem('mail');
+      this.subdomains = localStorage.getItem('subdomains');
+      this.pusherId = localStorage.getItem('pusherId');
+      this.pusherKey = localStorage.getItem('pusherKey');
+      this.pusherSecret = localStorage.getItem('pusherSecret');
+      this.pusherCl = localStorage.getItem('pusherCl');
+
+      if(!this.pass){this.pass = '';}
+      if(!this.vpsPass){this.vpsPass = '';}
+      if(!this.vpsIp){this.vpsIp = '';}
+      if(!this.domain){this.domain = '';}
+      if(!this.mail){this.mail = '';}
+      if(!this.subdomains){this.subdomains = '';}
+      if(!this.pusherId){this.pusherId = '';}
+      if(!this.pusherKey){this.pusherKey = '';}
+      if(!this.pusherSecret){this.pusherSecret = '';}
+      if(!this.pusherCl){this.pusherCl = '';}
+
+    },
+
+
   };
 
   Vue.createApp(App).mount('#app')
