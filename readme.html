@@ -195,6 +195,54 @@
                 <span class="tests">проверяем что все поддомены открываются по https</span> <br>
             </p>
 
+            <h5>Настраиваем Laravel</h5>
+            <p>
+                cd <br>
+                git clone https://github.com/slava554/pwa-blueprint.git <br>
+                shopt -s dotglob nullglob <br>
+                mv pwa-blueprint/backend/* /var/www/{{fullSubdomains[0]}}/ <br>
+                cd /var/www/{{fullSubdomains[0]}}/ <br>
+                cp .env.example .env <br>
+                composer install <br>
+                php artisan key:generate <br>
+                nano .env <br>
+            </p>
+            <hr>
+            <p>
+                APP_NAME={{fullSubdomains[0]}} <br>
+                APP_URL=https://{{fullSubdomains[0]}} <br>
+                DB_PASSWORD={{pass}} <br>
+                PUSHER_APP_ID={{pusherId}} <br>
+                PUSHER_APP_KEY={{pusherKey}} <br>
+                PUSHER_APP_SECRET={{pusherSecret}} <br>
+                PUSHER_APP_CLUSTER={{pusherCl}} <br>
+            </p>
+            <hr>
+            <p>
+                chown -R www-data:www-data ./ <br>
+                nano /etc/apache2/sites-available/{{fullSubdomains[0]}}-le-ssl.conf <br>
+            </p>
+            <hr>
+            <p>
+                дописываем public <br>
+                после &lt;/VirtualHost&gt; <br>
+                &lt;Directory /var/www/{{fullSubdomains[0]}}/public/&gt; <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Options Indexes FollowSymLinks <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;AllowOverride All <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Require all granted <br>
+                &lt;/Directory&gt; <br>
+            </p>
+            <hr>
+            <p>
+                service apache2 restart <br>
+                <span class="tests">проверяем что на {{fullSubdomains[0]}} открывается главная страница laravel</span> <br>
+                переходим на backend.catboat.ml/pma.php <br>
+                создаем базу backend <br>
+                php artisan migrate <br>
+                <span class="tests">проверяем {{fullSubdomains[0]}}/api/v1/t</span> <br>
+
+            </p>
+
 
         </div>
 
