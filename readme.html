@@ -246,6 +246,52 @@
 
         </div>
 
+        <div id="frontend-setup">
+            <h4>Настройка фронтенда</h4>
+            <p>
+                git clone https://github.com/slava554/pwa-blueprint.git <br>
+                shopt -s dotglob nullglob <br>
+                mv pwa-blueprint/frontend/* /var/www/{{fullSubdomains[1]}}/ <br>
+                cd /var/www/{{fullSubdomains[1]}}/ <br>
+                npm install <br>
+                nano nuxt.config.js <br>
+                titleTemplate: '%s - {{fullSubdomains[1]}}', <br>
+                title: '{{fullSubdomains[1]}}', <br>
+                nano node_modules/@nuxt/vue-app/template/App.js <br>
+            </p>
+            <hr>
+            <p>
+                после data: () => ({ <br>
+                user: { <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;isLoggedIn: false, <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;name: '', <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;email: '', <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;avatar: '', <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;token: null, <br>
+                }, <br>
+
+                backend: { <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;url: 'https://{{fullSubdomains[0]}}/api/v1/', <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;pusher: { <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key: '{{pusherKey}}', <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cluster: '{{pusherCl}}', <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;channel: 'my-channel', <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;event: 'App\\Events\\TestEvent', <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;}, <br>
+                }, <br>
+            </p>
+            <hr>
+            <p>
+                npm run build <br>
+                npm run generate <br>
+
+                chown -R www-data:www-data ./ <br>
+                nano /etc/apache2/sites-available/{{fullSubdomains[1]}}-le-ssl.conf <br>
+                DocumentRoot /var/www/{{fullSubdomains[1]}}/dist <br>
+                service apache2 restart <br>
+                <span class="tests">проверяем что работает фронтенд и пользователи используют чат</span> <br>
+            </p>
+        </div>
     </main>
 </div>
 <script>

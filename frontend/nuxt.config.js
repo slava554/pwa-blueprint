@@ -3,7 +3,6 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
   ssr: false,
-  buildDir: 'build-v1',
 
   // Target (https://go.nuxtjs.dev/config-target)
   target: 'static',
@@ -84,7 +83,7 @@ export default {
     manifest: {
       name: 'Nuxt.js PWAs are so easy',
       short_name: 'Nuxt.js PWA',
-      lang: 'en',
+      lang: 'ru',
     },
   },
 
